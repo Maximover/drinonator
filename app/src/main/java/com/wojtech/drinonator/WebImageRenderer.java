@@ -15,7 +15,7 @@ public class WebImageRenderer implements Runnable{
 
     public WebImageRenderer(Activity activity, String image_url, ImageView target) throws MalformedURLException {
         this.activity = activity;
-        this.url = new URL(image_url+"/preview");
+        this.url = new URL(image_url+"");
         this.target = target;
     }
 

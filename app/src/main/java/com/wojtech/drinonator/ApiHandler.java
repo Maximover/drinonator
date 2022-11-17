@@ -15,8 +15,12 @@ public class ApiHandler implements Runnable{
     private final String API_KEY = "1";
     private final String BASE_URL = "https://www.thecocktaildb.com/api/json/v1/"+API_KEY+"/";
     public static final int GET_RANDOM_DRINK = 0;
+    // argu
     public static final int SEARCH_DRINK_BY_NAME = 1;
     public static final int SEARCH_ALCOHOLIC = 2;
+    public static final int GET_DRINK_DETAILS = 3;
+    // name of ingredient needs to be lowercase and separated by floor(_)
+    public static final int GET_INGREDIENT_DETAILS = 4;
 
     private boolean failed = false;
     private URL api_url;
@@ -24,6 +28,9 @@ public class ApiHandler implements Runnable{
     private final CountDownLatch latch;
 
     /**
+     * Runnable that is responsible for fetching data from API,
+     * after running an instance you can call latch.await() after
+     * passing a CountDownLatch as 3rd parameter.
      *
      * @param type type of api method
      * @param argument argument to be passed to api
@@ -44,30 +51,33 @@ public class ApiHandler implements Runnable{
                     this.api_url = new URL(url);
                     break;
                 case SEARCH_ALCOHOLIC:
-                    url = BASE_URL+"/filter.php?a=Alcoholic";
+                    url = BASE_URL+"/filter.php?a=" + argument;
+                    this.api_url = new URL(url);
+                    break;
+                case GET_DRINK_DETAILS:
+                    url = BASE_URL+"/lookup.php?i=" + argument;
                     this.api_url = new URL(url);
                     break;
             }
         }catch (Exception e){
-            this.failed = true;
+            e.printStackTrace();
         }
     }
 
     /**
      * Fetch data from api and parse it to JSONObject
      * @return data fetched from api
-     * @throws IOException failed preparation to fetch api
-     * @throws JSONException failed to parse json
      */
-    private JSONObject getData() throws IOException, JSONException {
-        if(failed){
-            throw new IOException();
+    private JSONObject getData() {
+        try {
+            Scanner scanner = new Scanner(api_url.openStream());
+            JSONTokener json_encoder = new JSONTokener(scanner.useDelimiter("\\Z").next());
+            JSONObject json = new JSONObject(json_encoder);
+            scanner.close();
+            return json;
+        }catch (Exception e){
+            return null;
         }
-        Scanner scanner = new Scanner(api_url.openStream());
-        JSONTokener json_encoder = new JSONTokener(scanner.useDelimiter("\\Z").next());
-        JSONObject json = new JSONObject(json_encoder);
-        scanner.close();
-        return json;
     }
 
     /**

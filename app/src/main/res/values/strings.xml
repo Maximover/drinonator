@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Drinonator</string>
-    <string name="nav_search">Szukaj</string>
-    <string name="nav_home">Strona Główna</string>
-    <string name="nav_favourites">Zapisane</string>
-    <string name="error_json_parse">Nie udało się przygotować wyników</string>
+    <string name="nav_search">Search</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_favourites">Saved</string>
+    <string name="error_json_parse">Failed to fetch your drinks</string>
 </resources>

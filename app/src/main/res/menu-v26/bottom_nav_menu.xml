@@ -4,15 +4,15 @@
         android:id="@+id/search"
         android:icon="@drawable/search"
         android:iconTint="@color/light_gray"
-        android:title=" " />
+        android:title="@string/nav_search" />
     <item
         android:id="@+id/home"
         android:icon="@drawable/wine"
         android:iconTint="@color/light_gray"
-        android:title=" " />
+        android:title="@string/nav_home" />
     <item
         android:id="@+id/favourites"
         android:icon="@drawable/favourite"
         android:iconTint="@color/light_gray"
-        android:title=" " />
+        android:title="@string/nav_favourites" />
 </menu>
