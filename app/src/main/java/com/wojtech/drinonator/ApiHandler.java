@@ -2,11 +2,9 @@ package com.wojtech.drinonator;
 
 import androidx.annotation.Nullable;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
@@ -15,14 +13,13 @@ public class ApiHandler implements Runnable{
     private final String API_KEY = "1";
     private final String BASE_URL = "https://www.thecocktaildb.com/api/json/v1/"+API_KEY+"/";
     public static final int GET_RANDOM_DRINK = 0;
-    // argu
+    // name of a drink needs to be lowercase and separated by floor(_)
     public static final int SEARCH_DRINK_BY_NAME = 1;
     public static final int SEARCH_ALCOHOLIC = 2;
     public static final int GET_DRINK_DETAILS = 3;
-    // name of ingredient needs to be lowercase and separated by floor(_)
+    // name of an ingredient needs to be lowercase and separated by floor(_)
     public static final int GET_INGREDIENT_DETAILS = 4;
 
-    private boolean failed = false;
     private URL api_url;
     private JSONObject drink_data = null;
     private final CountDownLatch latch;
@@ -42,20 +39,20 @@ public class ApiHandler implements Runnable{
             String url;
             switch (type){
                 case GET_RANDOM_DRINK:
-                    url = BASE_URL+"/random.php";
+                    url = BASE_URL+"random.php";
                     this.api_url = new URL(url);
                     break;
                 case SEARCH_DRINK_BY_NAME:
                     assert argument != null;
-                    url = BASE_URL+"/search.php?s=" + argument;
+                    url = BASE_URL+"search.php?s=" + argument;
                     this.api_url = new URL(url);
                     break;
                 case SEARCH_ALCOHOLIC:
-                    url = BASE_URL+"/filter.php?a=" + argument;
+                    url = BASE_URL+"filter.php?a=" + argument;
                     this.api_url = new URL(url);
                     break;
                 case GET_DRINK_DETAILS:
-                    url = BASE_URL+"/lookup.php?i=" + argument;
+                    url = BASE_URL+"lookup.php?i=" + argument;
                     this.api_url = new URL(url);
                     break;
             }
@@ -76,6 +73,7 @@ public class ApiHandler implements Runnable{
             scanner.close();
             return json;
         }catch (Exception e){
+            e.printStackTrace();
             return null;
         }
     }

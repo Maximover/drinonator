@@ -3,5 +3,7 @@
     <string name="nav_search">Search</string>
     <string name="nav_home">Home</string>
     <string name="nav_favourites">Saved</string>
-    <string name="error_json_parse">Failed to fetch your drinks</string>
+    <string name="search_hint">Search</string>
+    <string name="error_no_results">No Results Found</string>
+    <string name="error_json_parse">Failed To Fetch Your Drinks</string>
 </resources>

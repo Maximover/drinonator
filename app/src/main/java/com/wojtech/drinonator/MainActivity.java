@@ -30,20 +30,22 @@ public class MainActivity extends AppCompatActivity {
         }
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnItemSelectedListener(item -> {
-            switch(item.getItemId()){
-                case R.id.search:
-                    setFragment(new SearchFragment());
-                    return true;
-                case R.id.home:
-                    setFragment(new HomeFragment());
-                    return true;
-                case R.id.favourites:
-                    setFragment(new FavouriteFragment());
-                    return true;
+            int nav_current = bottomNavigationView.getSelectedItemId();
+            int nav_next = item.getItemId();
+            if(nav_next != nav_current && nav_next == R.id.search) {
+                setFragment(new SearchFragment());
+                return true;
+            }else if(nav_next == R.id.home) {
+                setFragment(new HomeFragment());
+                return true;
+            }else if(nav_next != nav_current && nav_next == R.id.favourites) {
+                setFragment(new FavouriteFragment());
+                return true;
             }
             return false;
         });
         bottomNavigationView.setSelectedItemId(R.id.home);
+        bottomNavigationView.setSelectedItemId(0);
     }
 
     /**

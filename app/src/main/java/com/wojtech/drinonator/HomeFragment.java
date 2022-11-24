@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -38,7 +39,7 @@ public class HomeFragment extends Fragment {
         // add loading indicator ???
         // await for api response
         ExecutorService main_executor = Executors.newSingleThreadExecutor();
-        ApiHandler api = new ApiHandler(ApiHandler.SEARCH_ALCOHOLIC, "alcoholic", latch);
+        ApiHandler api = new ApiHandler(ApiHandler.GET_RANDOM_DRINK, null, latch);
         try {
             main_executor.execute(api);
             latch.await();
@@ -47,49 +48,41 @@ public class HomeFragment extends Fragment {
         }finally {
             main_executor.shutdown();
         }
-        // scrollable layout setup
+        // layout setup
         ScrollView scroll_view = new ScrollView(this.getContext());
+        container.addView(scroll_view);
         LinearLayout main_layout = new LinearLayout(this.getContext());
         main_layout.setOrientation(LinearLayout.VERTICAL);
         scroll_view.addView(main_layout);
-        container.addView(scroll_view);
+        TextView category_view = new TextView(getContext());
+        category_view.setPadding(0, 40, 0, 40);
+        category_view.setTextColor(getResources().getColor(R.color.light_gray, null));
+        category_view.setTextSize(20);
+        category_view.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        main_layout.addView(category_view);
+        ImageView thumbnail_view = new ImageView(getContext());
+        thumbnail_view.setMinimumWidth(260);
+        thumbnail_view.setMinimumHeight(260);
+        main_layout.addView(thumbnail_view);
+        TextView name_view = new TextView(getContext());
+        name_view.setPadding(0, 20, 0, 20);
+        name_view.setTextColor(getResources().getColor(R.color.white, null));
+        name_view.setTextSize(30);
+        name_view.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        main_layout.addView(name_view);
         // render elements
-        ExecutorService executor = Executors.newFixedThreadPool(10);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
         try {
-            JSONArray drinks = api.getDrinkData().getJSONArray("drinks");
-            for(int i=0; i<drinks.length();i++) {
-                JSONObject drink = drinks.getJSONObject(i);
-                LinearLayout entry_layout = new LinearLayout(getContext());
-                entry_layout.setOrientation(LinearLayout.HORIZONTAL);
-                entry_layout.setVerticalGravity(View.TEXT_ALIGNMENT_CENTER);
-                entry_layout.setPadding(0, 5, 0, 5);
-
-                ImageView thumbnail = new ImageView(getContext());
-                thumbnail.setMinimumWidth(300);
-                thumbnail.setMinimumHeight(300);
-                thumbnail.setPadding(10,0, 10, 0);
-                WebImageRenderer renderer = new WebImageRenderer(getActivity(), drink.get("strDrinkThumb").toString(), thumbnail);
-                executor.execute(renderer);
-                entry_layout.addView(thumbnail);
-
-                LinearLayout desc_layout = new LinearLayout(getContext());
-                desc_layout.setOrientation(LinearLayout.VERTICAL);
-                TextView name = new TextView(getContext());
-                name.setText(drink.get("strDrink").toString());
-                name.setTextColor(getResources().getColor(R.color.white, null));
-                TextView desc = new TextView(getContext());
-                desc.setText(drink.get("strDrink").toString());
-                desc.setTextColor(getResources().getColor(R.color.white, null));
-                desc_layout.addView(name);
-                desc_layout.addView(desc);
-                entry_layout.addView(desc_layout);
-                main_layout.addView(entry_layout);
-            }
+            JSONObject drink = api.getDrinkData().getJSONArray("drinks").getJSONObject(0);
+            WebImageRenderer image_renderer = new WebImageRenderer(getActivity(), drink.getString("strDrinkThumb"), thumbnail_view);
+            executor.execute(image_renderer);
+            name_view.setText(drink.getString("strDrink"));
+            category_view.setText(drink.getString("strCategory"));
             // remove loading indicator ???
-        }catch(Exception e){
+        } catch(Exception e){
             Toast.makeText(this.getContext(), getString(R.string.error_json_parse), Toast.LENGTH_LONG).show();
             // change loading indicator to error indicator ???
-        }finally {
+        } finally {
             executor.shutdown();
         }
 
