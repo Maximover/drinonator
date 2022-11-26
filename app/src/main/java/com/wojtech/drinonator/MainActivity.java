@@ -33,19 +33,18 @@ public class MainActivity extends AppCompatActivity {
             int nav_current = bottomNavigationView.getSelectedItemId();
             int nav_next = item.getItemId();
             if(nav_next != nav_current && nav_next == R.id.search) {
-                setFragment(new SearchFragment());
+                setFragment(SearchFragment.newInstance());
                 return true;
             }else if(nav_next == R.id.home) {
-                setFragment(new HomeFragment());
+                setFragment(DrinkFragment.newInstance(null));
                 return true;
             }else if(nav_next != nav_current && nav_next == R.id.favourites) {
-                setFragment(new FavouriteFragment());
+                setFragment(FavouriteFragment.newInstance());
                 return true;
             }
             return false;
         });
         bottomNavigationView.setSelectedItemId(R.id.home);
-        bottomNavigationView.setSelectedItemId(0);
     }
 
     /**
@@ -55,9 +54,20 @@ public class MainActivity extends AppCompatActivity {
      *
      */
     public void setFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = this.getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.main_container, fragment)
+                .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void onBackPressed(){
+        System.out.println(getSupportFragmentManager().getBackStackEntryCount());
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStackImmediate();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

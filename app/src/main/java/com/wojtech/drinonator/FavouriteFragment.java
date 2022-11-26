@@ -14,6 +14,19 @@ public class FavouriteFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * Get fragment with drinks added as favourite
+     *
+     * @return A new instance of fragment FavouriteFragment.
+     */
+    public static FavouriteFragment newInstance() {
+        FavouriteFragment fragment = new FavouriteFragment();
+        Bundle args = new Bundle();
+        //
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

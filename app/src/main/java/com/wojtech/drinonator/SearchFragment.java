@@ -3,9 +3,9 @@ package com.wojtech.drinonator;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,7 +33,18 @@ public class SearchFragment extends Fragment {
 
     public SearchFragment() {
         // Required empty public constructor
-
+    }
+    /**
+     * Get fragment that enables user to search for drinks
+     *
+     * @return A new instance of fragment SearchFragment.
+     */
+    public static SearchFragment newInstance() {
+        SearchFragment fragment = new SearchFragment();
+        Bundle args = new Bundle();
+        //
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -63,12 +74,10 @@ public class SearchFragment extends Fragment {
 
         content_layout = new LinearLayout(this.getContext());
         content_layout.setOrientation(LinearLayout.VERTICAL);
-
         scroll_view.addView(content_layout);
         main_layout.addView(search_view);
         main_layout.addView(scroll_view);
         container.addView(main_layout);
-
 
         search_view.addTextChangedListener(new TextWatcher() {
             @Override
@@ -107,7 +116,7 @@ public class SearchFragment extends Fragment {
             JSONObject drink_data = api.getDrinkData();
             try{
                 JSONArray drinks = drink_data.getJSONArray("drinks");
-                for(int i=0; i<drinks.length();i++) {
+                for(int i=0; i<drinks.length(); i++) {
                     JSONObject drink = drinks.getJSONObject(i);
                     LinearLayout entry_layout = new LinearLayout(getContext());
                     entry_layout.setOrientation(LinearLayout.HORIZONTAL);
@@ -132,6 +141,12 @@ public class SearchFragment extends Fragment {
                     desc.setTextColor(getResources().getColor(R.color.light_gray, null));
                     desc_layout.addView(desc);
                     entry_layout.addView(desc_layout);
+                    entry_layout.setOnClickListener(v -> {
+                        getParentFragmentManager().beginTransaction()
+                                .replace(R.id.main_container, DrinkFragment.newInstance(drink), "DrinkDetailsFragment")
+                                .addToBackStack("DrinkDetailsFragment")
+                                .commit();
+                    });
                     content_layout.addView(entry_layout);
                 }
             } catch(Exception e){
@@ -146,7 +161,7 @@ public class SearchFragment extends Fragment {
             // remove loading indicator ???
         }catch(Exception e){
             e.printStackTrace();
-            Toast.makeText(this.getContext(), getString(R.string.error_json_parse), Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getContext(), getString(R.string.error_fetch_api), Toast.LENGTH_LONG).show();
             // change loading indicator to error indicator ???
         }finally {
             executor.shutdown();

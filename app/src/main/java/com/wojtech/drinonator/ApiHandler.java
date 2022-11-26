@@ -10,8 +10,6 @@ import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 
 public class ApiHandler implements Runnable{
-    private final String API_KEY = "1";
-    private final String BASE_URL = "https://www.thecocktaildb.com/api/json/v1/"+API_KEY+"/";
     public static final int GET_RANDOM_DRINK = 0;
     // name of a drink needs to be lowercase and separated by floor(_)
     public static final int SEARCH_DRINK_BY_NAME = 1;
@@ -34,7 +32,10 @@ public class ApiHandler implements Runnable{
      * @param latch a CountDownLatch that will notify calling thread after fetching data from API
      */
     public ApiHandler(int type, @Nullable String argument, CountDownLatch latch){
+        String API_KEY = "1";
+        String BASE_URL = "https://www.thecocktaildb.com/api/json/v1/"+API_KEY+"/";
         this.latch = latch;
+
         try {
             String url;
             switch (type){
@@ -53,6 +54,10 @@ public class ApiHandler implements Runnable{
                     break;
                 case GET_DRINK_DETAILS:
                     url = BASE_URL+"lookup.php?i=" + argument;
+                    this.api_url = new URL(url);
+                    break;
+                case GET_INGREDIENT_DETAILS:
+                    url = BASE_URL+"filter.php?i=" + argument;
                     this.api_url = new URL(url);
                     break;
             }
