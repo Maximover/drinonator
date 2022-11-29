@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DrinkFragment"/>
+    tools:context=".DrinkFragment">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="15dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="@drawable/favourite_filled"
+        android:foregroundGravity="clip_horizontal|clip_vertical"
+        android:tint="@color/white"
+        app:backgroundTint="@color/black_secondary"
+        app:borderWidth="0dp"
+        app:rippleColor="@color/light_gray" />
+</FrameLayout>

@@ -11,6 +11,6 @@
         android:titleCondensed="true" />
     <item
         android:id="@+id/favourites"
-        android:icon="@drawable/favourite"
+        android:icon="@drawable/favourite_filled"
         android:title="@string/nav_favourites" />
 </menu>

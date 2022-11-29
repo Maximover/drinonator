@@ -12,7 +12,7 @@
         android:title="@string/nav_home" />
     <item
         android:id="@+id/favourites"
-        android:icon="@drawable/favourite"
+        android:icon="@drawable/favourite_filled"
         android:iconTint="@color/light_gray"
         android:title="@string/nav_favourites" />
 </menu>

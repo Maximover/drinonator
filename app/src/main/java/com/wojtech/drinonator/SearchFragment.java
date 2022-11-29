@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,6 +29,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SearchFragment extends Fragment {
     private LinearLayout content_layout;
     private AtomicBoolean loading_finished;
+    private EditText search_view;
+    private String recently_searched;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -55,7 +56,6 @@ public class SearchFragment extends Fragment {
         container.removeAllViews();
         loading_finished = new AtomicBoolean();
         // get fragment layout context
-        View fragment_view = inflater.inflate(R.layout.fragment_search, container, false);
         LinearLayout main_layout = new LinearLayout(getContext());
         main_layout.setOrientation(LinearLayout.VERTICAL);
         main_layout.setPadding(0, 10, 0, 0);
@@ -63,7 +63,7 @@ public class SearchFragment extends Fragment {
         ScrollView scroll_view = new ScrollView(this.getContext());
         scroll_view.setPadding(0, 10, 0, 0);
 
-        EditText search_view = new EditText(getContext());
+        search_view = new EditText(getContext());
         search_view.setPadding(60, 18, 60, 18);
         search_view.setTextColor(getResources().getColor(R.color.white, null));
         search_view.setHintTextColor(getResources().getColor(R.color.light_gray, null));
@@ -89,7 +89,10 @@ public class SearchFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 String phrase = editable.toString().replaceAll("\\s+", "_");
-                if(phrase.length() > 0 && loading_finished.get()) renderSearchElements(phrase);
+                if(phrase.length() > 0 && loading_finished.get()) {
+                    renderSearchElements(phrase);
+                    recently_searched = phrase;
+                }
             }
         });
 
@@ -126,27 +129,27 @@ public class SearchFragment extends Fragment {
                     thumbnail.setMinimumWidth(300);
                     thumbnail.setMinimumHeight(300);
                     thumbnail.setPadding(10,0, 10, 0);
-                    WebImageRenderer renderer = new WebImageRenderer(getActivity(), drink.get("strDrinkThumb").toString(), thumbnail);
+                    WebImageRenderer renderer = new WebImageRenderer(getActivity(), drink.get(ApiHandler.DRINK_THUMBNAIL).toString(), thumbnail);
                     executor.execute(renderer);
                     entry_layout.addView(thumbnail);
 
                     LinearLayout desc_layout = new LinearLayout(getContext());
                     desc_layout.setOrientation(LinearLayout.VERTICAL);
                     TextView name = new TextView(getContext());
-                    name.setText(drink.get("strDrink").toString());
+                    name.setText(drink.get(ApiHandler.DRINK_NAME).toString());
                     name.setTextColor(getResources().getColor(R.color.white, null));
                     desc_layout.addView(name);
                     TextView desc = new TextView(getContext());
-                    desc.setText(drink.get("strCategory").toString());
+                    desc.setText(drink.get(ApiHandler.DRINK_CATEGORY).toString());
                     desc.setTextColor(getResources().getColor(R.color.light_gray, null));
                     desc_layout.addView(desc);
                     entry_layout.addView(desc_layout);
-                    entry_layout.setOnClickListener(v -> {
-                        getParentFragmentManager().beginTransaction()
-                                .replace(R.id.main_container, DrinkFragment.newInstance(drink), "DrinkDetailsFragment")
-                                .addToBackStack("DrinkDetailsFragment")
-                                .commit();
-                    });
+                    entry_layout.setOnClickListener(v -> getParentFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.main_container, DrinkFragment.newInstance(drink), "DrinkDetailsFragment")
+                            .addToBackStack("DrinkDetailsFragment")
+                            .commit()
+                    );
                     content_layout.addView(entry_layout);
                 }
             } catch(Exception e){
@@ -167,5 +170,11 @@ public class SearchFragment extends Fragment {
             executor.shutdown();
             loading_finished.set(true);
         }
+    }
+
+    @Override
+    public void onResume() {
+        search_view.setText(recently_searched);
+        super.onResume();
     }
 }

@@ -1,5 +1,8 @@
 package com.wojtech.drinonator;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+
 import androidx.annotation.Nullable;
 
 import org.json.JSONObject;
@@ -11,12 +14,21 @@ import java.util.concurrent.CountDownLatch;
 
 public class ApiHandler implements Runnable{
     public static final int GET_RANDOM_DRINK = 0;
-    // name of a drink needs to be lowercase and separated by floor(_)
+    // names need to be lowercase and separated by floor(_)
     public static final int SEARCH_DRINK_BY_NAME = 1;
     public static final int SEARCH_ALCOHOLIC = 2;
     public static final int GET_DRINK_DETAILS = 3;
-    // name of an ingredient needs to be lowercase and separated by floor(_)
     public static final int GET_INGREDIENT_DETAILS = 4;
+
+    public static final String DRINK_ID = "idDrink";
+    public static final String DRINK_NAME = "strDrink";
+    public static final String DRINK_CATEGORY = "strCategory";
+    public static final String DRINK_GLASS = "strGlass";
+    public static final String DRINK_INSTRUCTIONS = "strInstructions";
+    public static final String DRINK_THUMBNAIL = "strDrinkThumb";
+    public static final String DRINK_INGREDIENT_BASE = "strIngredient";
+    public static final String DRINK_MEASURE_BASE = "strMeasure";
+    public static final String DRINK_ADDED_AT = "strAddedAt";
 
     private URL api_url;
     private JSONObject drink_data = null;
@@ -101,4 +113,17 @@ public class ApiHandler implements Runnable{
             e.printStackTrace();
         }
     }
+
+    /**
+     * Checks whether internet connection is available
+     * @param context application context
+     * @return True if internet connection is available
+     */
+    public static boolean checkForInternet(Context context){
+        ConnectivityManager connectivity_manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return (connectivity_manager.getActiveNetworkInfo() != null
+                && connectivity_manager.getActiveNetworkInfo().isAvailable()
+                && connectivity_manager.getActiveNetworkInfo().isConnected());
+    }
+
 }

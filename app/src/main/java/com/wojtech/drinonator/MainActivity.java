@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -57,16 +58,16 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = this.getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.main_container, fragment)
-                .addToBackStack(null)
+                .addToBackStack("main_stack")
                 .commit();
     }
 
     @Override
-    public void onBackPressed(){
-        System.out.println(getSupportFragmentManager().getBackStackEntryCount());
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStackImmediate();
         } else {
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.confirm_exit), Toast.LENGTH_SHORT).show();
             super.onBackPressed();
         }
     }
