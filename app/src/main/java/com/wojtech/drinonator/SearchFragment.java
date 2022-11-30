@@ -1,8 +1,10 @@
 package com.wojtech.drinonator;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
@@ -24,6 +26,7 @@ import org.json.JSONObject;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SearchFragment extends Fragment {
@@ -71,6 +74,9 @@ public class SearchFragment extends Fragment {
         search_view.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.search_border, null));
         search_view.setEms(20);
         search_view.setSingleLine();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            search_view.setTextCursorDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.edittext_cursor, null));
+        }
 
         content_layout = new LinearLayout(this.getContext());
         content_layout.setOrientation(LinearLayout.VERTICAL);
@@ -95,8 +101,9 @@ public class SearchFragment extends Fragment {
                 }
             }
         });
-
-        renderSearchElements("ma");
+        //show some random drinks
+        String random_empty_search = String.valueOf((char)ThreadLocalRandom.current().nextInt(97, 123));
+        renderSearchElements(random_empty_search);
         return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
@@ -126,8 +133,8 @@ public class SearchFragment extends Fragment {
                     entry_layout.setVerticalGravity(View.TEXT_ALIGNMENT_CENTER);
                     entry_layout.setPadding(0, 5, 0, 5);
                     ImageView thumbnail = new ImageView(getContext());
-                    thumbnail.setMinimumWidth(300);
-                    thumbnail.setMinimumHeight(300);
+                    thumbnail.setLayoutParams(new ViewGroup.LayoutParams(300, 300));
+                    thumbnail.setScaleType(ImageView.ScaleType.FIT_CENTER);
                     thumbnail.setPadding(10,0, 10, 0);
                     WebImageRenderer renderer = new WebImageRenderer(getActivity(), drink.get(ApiHandler.DRINK_THUMBNAIL).toString(), thumbnail);
                     executor.execute(renderer);
@@ -152,6 +159,13 @@ public class SearchFragment extends Fragment {
                     );
                     content_layout.addView(entry_layout);
                 }
+                TextView results_footer = new TextView(getContext());
+                results_footer.setPadding(60, 18, 60, 18);
+                results_footer.setTextSize(26);
+                results_footer.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                results_footer.setTextColor(getResources().getColor(R.color.light_gray, null));
+                results_footer.setText(". . .");
+                content_layout.addView(results_footer);
             } catch(Exception e){
                 e.printStackTrace();
                 TextView no_results_view = new TextView(getContext());

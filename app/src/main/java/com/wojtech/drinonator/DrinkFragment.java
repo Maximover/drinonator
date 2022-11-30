@@ -183,7 +183,13 @@ public class DrinkFragment extends Fragment {
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-
+                TextView results_footer = new TextView(getContext());
+                results_footer.setPadding(60, 18, 60, 18);
+                results_footer.setTextSize(26);
+                results_footer.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                results_footer.setTextColor(getResources().getColor(R.color.light_gray, null));
+                results_footer.setText(". . .");
+                recipe_view.addView(results_footer);
                 // remove loading indicator ???
             } catch (Exception e) {
                 e.printStackTrace();
@@ -271,15 +277,15 @@ public class DrinkFragment extends Fragment {
     @Override
     public void onResume() {
         internet_available = ApiHandler.checkForInternet(requireContext());
-        if(internet_available) {
+        if(internet_available || drink != null) {
             try {
-                this.requireView().findViewById(R.id.floatingActionButton).setEnabled(true);
+                this.requireView().findViewById(R.id.floatingActionButton).setVisibility(View.VISIBLE);
             }catch (Exception e){
                 e.printStackTrace();
             }
         } else {
             try {
-                this.requireView().findViewById(R.id.floatingActionButton).setEnabled(false);
+                this.requireView().findViewById(R.id.floatingActionButton).setVisibility(View.INVISIBLE);
             }catch (Exception e){
                 e.printStackTrace();
             }
