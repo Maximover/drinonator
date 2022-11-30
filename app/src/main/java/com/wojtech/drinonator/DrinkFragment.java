@@ -151,7 +151,7 @@ public class DrinkFragment extends Fragment {
                 executor.execute(image_renderer);
                 name_view.setText(drink.getString(ApiHandler.DRINK_NAME));
                 category_view.setText(drink.getString(ApiHandler.DRINK_CATEGORY));
-                glass_suggestion.setText(getResources().getText(R.string.glass_suggestion)+" "+drink.getString(ApiHandler.DRINK_GLASS));
+                glass_suggestion.setText(getResources().getText(R.string.glass_suggestion_label)+" "+drink.getString(ApiHandler.DRINK_GLASS));
                 recipe_instructions.setText(drink.getString(ApiHandler.DRINK_INSTRUCTIONS));
                 int recipe_step = 1;
                 try{
@@ -241,7 +241,6 @@ public class DrinkFragment extends Fragment {
                     String glass = drink.getString(ApiHandler.DRINK_GLASS);
                     String thumbnail_url = drink.getString(ApiHandler.DRINK_THUMBNAIL);
                     String instructions = drink.getString(ApiHandler.DRINK_INSTRUCTIONS);
-
                     int recipe_step = 1;
                     try {
                         while (!drink.getString(ApiHandler.DRINK_INGREDIENT_BASE + recipe_step).equals("null")) {
@@ -291,7 +290,6 @@ public class DrinkFragment extends Fragment {
             }
         }
         super.onResume();
-
     }
 
     /**

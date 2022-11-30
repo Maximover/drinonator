@@ -29,7 +29,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String FAVOURITES_ADDED_AT = "added_at";
 
     @SuppressLint("SimpleDateFormat")
-    private final SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+    private final SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd.MM.yyyy");
 
     public Database(Context context){
         super(context, DB_NAME, null, DB_VERSION);
@@ -103,7 +103,7 @@ public class Database extends SQLiteOpenHelper {
     public ArrayList<HashMap<String, String>> getFavourites(){
         ArrayList<HashMap<String, String>> entries = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_FAVOURITES, new String[]{FAVOURITES_ID, FAVOURITES_NAME, FAVOURITES_CATEGORY, FAVOURITES_THUMBNAIL_URL, FAVOURITES_ADDED_AT}, null, null, null, null, "-"+FAVOURITES_ADDED_AT);
+        Cursor cursor = db.query(TABLE_FAVOURITES, new String[]{FAVOURITES_ID, FAVOURITES_NAME, FAVOURITES_CATEGORY, FAVOURITES_THUMBNAIL_URL, FAVOURITES_ADDED_AT}, null, null, null, null, FAVOURITES_ADDED_AT+" DESC");
         while(cursor.moveToNext()){
             HashMap<String, String> entry = new HashMap<>();
             entry.put(FAVOURITES_ID, cursor.getString(cursor.getColumnIndexOrThrow(FAVOURITES_ID)));

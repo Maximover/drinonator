@@ -1,5 +1,6 @@
 package com.wojtech.drinonator;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,7 @@ public class FavouriteFragment extends Fragment {
         return fragment;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -99,10 +101,17 @@ public class FavouriteFragment extends Fragment {
                 desc.setText(drink.get(Database.FAVOURITES_CATEGORY));
                 desc.setTextColor(getResources().getColor(R.color.light_gray, null));
                 desc_layout.addView(desc);
+                TextView added_at = new TextView(getContext());
+                added_at.setPadding(0, 80, 0, 0);
+                added_at.setText(getText(R.string.added_at_label)+" "+drink.get(Database.FAVOURITES_ADDED_AT));
+                added_at.setTextColor(getResources().getColor(R.color.light_gray, null));
+                desc_layout.addView(added_at);
                 entry_layout.addView(desc_layout);
                 entry_layout.setOnClickListener(v -> getParentFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.main_container, DrinkFragment.newInstance(db.getDrink(Integer.parseInt(Objects.requireNonNull(drink.get(Database.FAVOURITES_ID))))), "DrinkDetailsFragment")
+                        .replace(R.id.main_container,
+                                DrinkFragment.newInstance(db.getDrink(Integer.parseInt(Objects.requireNonNull(drink.get(Database.FAVOURITES_ID))))),
+                                "DrinkDetailsFragment")
                         .addToBackStack("DrinkDetailsFragment")
                         .commit()
                 );

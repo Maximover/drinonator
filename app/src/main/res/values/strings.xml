@@ -8,7 +8,8 @@
     <string name="favourites_hint">Add To Favourites</string>
     <string name="added_to_favourites">Added To Favourites</string>
     <string name="removed_from_favourites">Removed From Favourites</string>
-    <string name="glass_suggestion">Suggested glass: </string>
+    <string name="glass_suggestion_label">Suggested glass: </string>
+    <string name="added_at_label">Added At: </string>
     <string name="no_favourite_drinks">You have no favourite drinks!</string>
     <string name="error_added_to_favourites">Failed To Add To Favourites</string>
     <string name="error_removed_from_favourites">Failed To Remove From Favourites</string>
